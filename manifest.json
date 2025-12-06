@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "WikiTube",
+  "version": "1.0.0",
+  "description": "Embeds relevant YouTube videos on Wikipedia pages.",
+  "permissions": [],
+  "host_permissions": ["https://www.googleapis.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.wikipedia.org/wiki/*"],
+      "js": ["src/content.tsx"]
+    }
+  ]
+}
