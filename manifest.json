@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "WikiTube",
   "version": "1.0.0",
-  "description": "Embeds relevant YouTube videos on Wikipedia pages.",
+  "description": "Embeds relevant YouTube videos and Highlights text on Wikipedia pages.",
   "permissions": [],
   "host_permissions": ["https://www.googleapis.com/*"],
   "content_scripts": [

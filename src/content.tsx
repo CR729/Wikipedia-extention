@@ -8,6 +8,9 @@ function injectApp() {
   const contentBody = document.getElementById('bodyContent');
   
   if (contentBody) {
+    // Check if we already injected to avoid duplicates
+    if (document.getElementById('wikitube-extension-root')) return;
+
     // Create a container for our extension
     const appContainer = document.createElement('div');
     appContainer.id = 'wikitube-extension-root';

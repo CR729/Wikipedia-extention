@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import WikiHighlighter from './WikiHighlighter';
 
 // --- CONFIGURATION ---
 const API_KEY = 'AIzaSyDo0Gnfz3j9dw1RsExJ2irqbzGLlBpoJfw'; 
@@ -18,7 +19,6 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        // 1. Get the article title from the H1 tag of the Wiki page
         const pageTitle = document.querySelector('h1#firstHeading')?.textContent;
         
         if (!pageTitle) {
@@ -29,7 +29,6 @@ const App: React.FC = () => {
 
         const query = encodeURIComponent(`${pageTitle} documentary or summary`);
         
-        // 2. Call YouTube API
         const response = await fetch(
           `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&maxResults=${VIDEO_COUNT}&type=video&key=${API_KEY}`
         );
@@ -56,37 +55,44 @@ const App: React.FC = () => {
     fetchVideos();
   }, []);
 
-  if (loading) return <div style={styles.container}>Loading related videos...</div>;
-  if (error) return <div style={styles.container}>Error: {error}</div>;
-  if (videos.length === 0) return null;
-
   return (
     <div style={styles.container}>
-      <h3 style={styles.header}>
-        <span role="img" aria-label="tv">📺</span> Related Videos
-      </h3>
-      <div style={styles.grid}>
-        {videos.map((video) => (
-          <div key={video.id} style={styles.videoWrapper}>
-            <iframe
-              width="100%"
-              height="200"
-              src={`https://www.youtube.com/embed/${video.id}`}
-              title={video.title}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{ borderRadius: '8px' }}
-            ></iframe>
-            <p style={styles.videoTitle}>{video.title}</p>
+      {/* 1. Inject the Highlighter. It renders invisible logic + a Portal button */}
+      <WikiHighlighter />
+
+      {/* 2. Existing Video UI */}
+      {loading && <div>Loading related videos...</div>}
+      
+      {error && <div>Error: {error}</div>}
+      
+      {!loading && !error && videos.length > 0 && (
+        <>
+          <h3 style={styles.header}>
+            <span role="img" aria-label="tv">📺</span> Related Videos
+          </h3>
+          <div style={styles.grid}>
+            {videos.map((video) => (
+              <div key={video.id} style={styles.videoWrapper}>
+                <iframe
+                  width="100%"
+                  height="200"
+                  src={`https://www.youtube.com/embed/${video.id}`}
+                  title={video.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ borderRadius: '8px' }}
+                ></iframe>
+                <p style={styles.videoTitle}>{video.title}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   );
 };
 
-// Simple inline styles to avoid CSS file injection complexity
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     backgroundColor: '#f8f9fa',
@@ -95,6 +101,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: '15px',
     marginBottom: '20px',
     fontFamily: 'sans-serif',
+    position: 'relative'
   },
   header: {
     marginTop: 0,
@@ -105,7 +112,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)', // 3 Columns
+    gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '15px',
   },
   videoWrapper: {
