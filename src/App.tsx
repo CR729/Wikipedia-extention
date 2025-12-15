@@ -12,7 +12,7 @@ const VIDEO_COUNT = 3;
 
 // ----- GEMINI API CONFIGURATION -----
 // Note: This key is used directly in the fetch call.
-const GEMINI_API_KEY = 'AIzaSyC-a0Md6VgH1VwCMswkUsubiyZHi1TrFok'; 
+const GEMINI_API_KEY = 'AIzaSyDZQKYiE8bo0vyXneT2rGOVSmoqMUBdU_M'; 
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_API_KEY;
 // ---------------------
 
